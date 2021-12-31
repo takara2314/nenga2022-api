@@ -12,6 +12,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+
+	"gopkg.in/yaml.v2"
 )
 
 type postedUserInfo struct {
@@ -33,16 +35,27 @@ type resData struct {
 	ModelUrl string `json:"model_url"`
 }
 
+type Config struct {
+	PasswordsHashed string `yaml:"PASSWORDS_HASHED"`
+	PersonNames     string `yaml:"PERSON_NAMES"`
+	Greetings       string `yaml:"GREETINGS"`
+	Models          string `yaml:"MODELS"`
+}
+
 var passwords []string
 var personNames []string
 var greetings []string
 var models []string
 
 func main() {
-	passwords = strings.Split(os.Getenv("PASSWORDS_HASHED"), ",")
-	personNames = strings.Split(os.Getenv("PERSON_NAMES"), ",")
-	greetings = strings.Split(os.Getenv("GREETINGS"), ",")
-	models = strings.Split(os.Getenv("MODELS"), ",")
+	config := Config{}
+	b, _ := os.ReadFile("config.yaml")
+	yaml.Unmarshal(b, &config)
+
+	passwords = strings.Split(config.PasswordsHashed, ",")
+	personNames = strings.Split(config.PersonNames, ",")
+	greetings = strings.Split(config.Greetings, ",")
+	models = strings.Split(config.Models, ",")
 
 	router := gin.Default()
 

@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -49,8 +50,8 @@ var models []string
 
 func main() {
 	config := Config{}
-	b, _ := os.ReadFile("config.yaml")
-	yaml.Unmarshal(b, &config)
+	s, _ := ioutil.ReadFile("./config.yaml")
+	yaml.Unmarshal(s, &config)
 
 	passwords = strings.Split(config.PasswordsHashed, ",")
 	personNames = strings.Split(config.PersonNames, ",")

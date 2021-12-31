@@ -61,7 +61,9 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(cors.Default())
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:5500", "https://nenga2022.2314.tk"}
+	router.Use(cors.New(corsConfig))
 
 	router.POST("/auth", authPOST)
 

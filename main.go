@@ -66,6 +66,7 @@ func main() {
 	router.Use(cors.New(corsConfig))
 
 	router.POST("/auth", authPOST)
+	router.GET("/models/:name", modelsGET)
 
 	router.Run(":" + os.Getenv("PORT"))
 }
@@ -100,7 +101,7 @@ func authPOST(c *gin.Context) {
 			Status:   "OK",
 			Name:     personNames[passIndex],
 			Greeting: greetings[passIndex],
-			ModelUrl: models[passIndex],
+			ModelUrl: "https://takaran-nenga2022-api.appspot.com/models/" + models[passIndex],
 		}
 		c.JSON(http.StatusOK, res)
 
@@ -133,6 +134,12 @@ func authPOST(c *gin.Context) {
 		userInfo.Browser,
 		c.Request.Header.Get("user-agent"),
 	)
+}
+
+// [GET] /models
+func modelsGET(c *gin.Context) {
+	name := c.Param("name")
+	c.File("models/" + name)
 }
 
 // 時差変換をして返す関数

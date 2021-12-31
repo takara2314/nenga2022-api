@@ -31,6 +31,7 @@ type userActivity struct {
 }
 
 type resData struct {
+	Status   string `json:"status"`
 	Name     string `json:"name"`
 	Greeting string `json:"greeting"`
 	ModelUrl string `json:"model_url"`
@@ -94,6 +95,7 @@ func authPOST(c *gin.Context) {
 	// パスワードが一致するなら
 	if passIndex := findIndexSliceStr(passwords, passHashed); passIndex != -1 {
 		res := resData{
+			Status:   "OK",
 			Name:     personNames[passIndex],
 			Greeting: greetings[passIndex],
 			ModelUrl: models[passIndex],
@@ -117,7 +119,9 @@ func authPOST(c *gin.Context) {
 		return
 	}
 
-	c.String(http.StatusUnauthorized, "401 Unauthorized")
+	c.JSON(http.StatusUnauthorized, resData{
+		Status: "Unauthorized",
+	})
 
 	fmt.Printf(
 		"ログインを試みたユーザーがいましたが、ブロックしました。\n時刻: %s\nIPアドレス: %s\nデバイス: %s\nブラウザ: %s\nユーザーエージェント: %s\n",
